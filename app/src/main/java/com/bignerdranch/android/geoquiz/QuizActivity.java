@@ -30,7 +30,10 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
 
-    private void updateQuestion() {
+    private void updateQuestion(boolean advanceIndex) {
+        if (advanceIndex) {
+            mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        }
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
@@ -44,6 +47,9 @@ public class QuizActivity extends AppCompatActivity {
             mid = R.string.incorrect_toast;
         }
         Toast.makeText(this, mid, Toast.LENGTH_SHORT).show();
+        if (userPressedTrue == answerIsTrue) {
+            updateQuestion(true);
+        }
     }
 
 
@@ -55,6 +61,12 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuestion(true);
+            }
+        });
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
@@ -79,8 +91,7 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                updateQuestion();
+                updateQuestion(true);
             }
         });
 
@@ -97,7 +108,7 @@ public class QuizActivity extends AppCompatActivity {
         });*/
 
 
-        updateQuestion();
+        updateQuestion(false);
     }
 
     @Override
