@@ -17,6 +17,8 @@ public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+    private Button mPrevButton;
+
     private TextView mQuestionTextView;
 
     private Question[] mQuestionBank = new Question[] {
@@ -30,9 +32,13 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
 
-    private void updateQuestion(boolean advanceIndex) {
-        if (advanceIndex) {
-            mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+    private void updateQuestion(int advanceIndex) {
+
+        if (advanceIndex != 0) {
+            while (mCurrentIndex + advanceIndex < 0) {
+                advanceIndex += mQuestionBank.length;
+            }
+            mCurrentIndex = (mCurrentIndex + advanceIndex) % mQuestionBank.length;
         }
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
@@ -48,7 +54,7 @@ public class QuizActivity extends AppCompatActivity {
         }
         Toast.makeText(this, mid, Toast.LENGTH_SHORT).show();
         if (userPressedTrue == answerIsTrue) {
-            updateQuestion(true);
+            updateQuestion(1);
         }
     }
 
@@ -64,7 +70,7 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateQuestion(true);
+                updateQuestion(1);
             }
         });
 
@@ -91,7 +97,15 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateQuestion(true);
+                updateQuestion(1);
+            }
+        });
+
+        mPrevButton = (Button) findViewById(R.id.prev_button);
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuestion(-1);
             }
         });
 
@@ -108,7 +122,7 @@ public class QuizActivity extends AppCompatActivity {
         });*/
 
 
-        updateQuestion(false);
+        updateQuestion(0);
     }
 
     @Override
