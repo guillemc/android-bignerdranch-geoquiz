@@ -48,11 +48,6 @@
         android:src="@drawable/arrow_right" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/testtext"
-        android:ems="4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>

@@ -1,8 +1,6 @@
 package com.bignerdranch.android.geoquiz;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,7 +49,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        int mid = 0;
+        int mid;
         if (userPressedTrue == answerIsTrue) {
             mid = R.string.correct_toast;
         } else {
