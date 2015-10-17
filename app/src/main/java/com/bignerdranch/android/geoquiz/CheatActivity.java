@@ -68,6 +68,9 @@ public class CheatActivity extends AppCompatActivity {
             }
         });
 
+        TextView tv = (TextView) findViewById(R.id.view_version);
+        tv.setText(String.format("API level %d", Build.VERSION.SDK_INT));
+
     }
 
     @Override
