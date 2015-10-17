@@ -18,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_CHEATS = "cheats";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private Button mTrueButton;
@@ -38,10 +39,9 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
-    private boolean mIsCheater;
+    private boolean[] mCheats = new boolean[mQuestionBank.length];
 
     private void updateQuestion(int advanceIndex) {
-        mIsCheater = false;
         if (advanceIndex != 0) {
             while (mCurrentIndex + advanceIndex < 0) {
                 advanceIndex += mQuestionBank.length;
@@ -55,7 +55,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int mid;
-        if (mIsCheater) {
+        if (mCheats[mCurrentIndex]) {
             mid = R.string.judgement_toast;
         } else if (userPressedTrue == answerIsTrue) {
             mid = R.string.correct_toast;
@@ -147,6 +147,10 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            boolean[] a = savedInstanceState.getBooleanArray(KEY_CHEATS);
+            if (a != null) {
+                mCheats = a;
+            }
         }
 
         updateQuestion(0);
@@ -157,18 +161,16 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.d(TAG, "onSaveInstanceState(Bundle) called");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBooleanArray(KEY_CHEATS, mCheats);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
+        if (resultCode != Activity.RESULT_OK || requestCode != REQUEST_CODE_CHEAT || data == null) {
             return;
         }
-        if (requestCode == REQUEST_CODE_CHEAT) {
-            if (data == null) {
-                return;
-            }
-            mIsCheater = CheatActivity.wasAnswerShown(data);
+        if (CheatActivity.wasAnswerShown(data)) {
+            mCheats[mCurrentIndex] = true;
         }
     }
 
